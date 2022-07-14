@@ -1,0 +1,30 @@
+name: Build Web
+
+on:
+  workflow_dispatch:
+
+env:
+  cos_bucket: black-ide-landing-1303090311
+  cos_region: ap-singapore
+
+jobs:
+  upload:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          path: ./website
+
+      - name: Create a placeholder for COS
+        run: echo cos > ./.placeholder
+
+      - name: Upload Website to COS
+        uses: zkqiang/tencent-cos-action@v0.1.0
+        with:
+          args: upload ./.placeholder / && delete -r -f / && upload -r ./website /
+          secret_id: ${{ secrets.tencent_cloud_secretid }}
+          secret_key: ${{ secrets.tencent_cloud_secretkey }}
+          bucket: ${{ env.cos_bucket }}
+          region: ${{ env.cos_region }}
