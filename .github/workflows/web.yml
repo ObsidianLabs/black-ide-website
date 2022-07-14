@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: master
-          path: ./website
+          path: ./
 
       - name: Create a placeholder for COS
         run: echo cos > ./.placeholder
@@ -23,7 +23,7 @@ jobs:
       - name: Upload Website to COS
         uses: zkqiang/tencent-cos-action@v0.1.0
         with:
-          args: upload ./.placeholder / && delete -r -f / && upload -r ./website /
+          args: upload ./.placeholder / && delete -r -f / && upload -r ./ /
           secret_id: ${{ secrets.tencent_cloud_secretid }}
           secret_key: ${{ secrets.tencent_cloud_secretkey }}
           bucket: ${{ env.cos_bucket }}
